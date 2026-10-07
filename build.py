@@ -14,7 +14,7 @@ SITE_URL = "https://www.velinsurance.com"
 
 # The document upload assistant (Google Apps Script web app). Paste its /exec link here; while it is empty the
 # Contact page shows WhatsApp and email instead of the upload chat.
-UPLOAD_URL = ""
+UPLOAD_URL = "https://script.google.com/macros/s/AKfycby0YkvWk9TNJY0drUmk_-lcxW9lTido19z2J3fwWg_keuhjFzfqoyZiMTmDd3BuRx3y/exec"
 
 PHONE = "(770) 547-6030"
 PHONE_E164 = "+17705476030"
