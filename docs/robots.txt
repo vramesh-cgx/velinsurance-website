@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.velinsurance.com/sitemap.xml
