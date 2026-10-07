@@ -88,6 +88,44 @@
   document.addEventListener('click', e => {
     if (!dd.contains(e.target)) { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); }
   });
+
+  // Contact page on phones: once the visitor is in the chat, size it to the visible screen (above the keyboard)
+  // and keep its top at the top of the screen, so the keyboard can't push the chat away.
+  const chat = document.querySelector('.upload-frame');
+  if (chat) {
+    const phone = () => innerWidth <= 820;
+    const vv = window.visualViewport;
+    let active = false;
+    const fit = () => {
+      if (!active || !phone()) { chat.style.height = ''; return; }
+      chat.style.height = Math.max(340, Math.round((vv ? vv.height : innerHeight) - 8)) + 'px';
+    };
+    const align = () => {
+      const top = chat.getBoundingClientRect().top - (vv ? vv.offsetTop : 0);
+      if (Math.abs(top - 4) > 2) scrollBy(0, top - 4);
+    };
+    addEventListener('blur', () => {          // focus moved into the chat (a tap or click inside it)
+      setTimeout(() => {
+        if (document.activeElement !== chat || !phone()) return;
+        active = true; fit(); align();
+      }, 0);
+    });
+    if (vv) vv.addEventListener('resize', () => {   // keyboard opened or closed
+      if (!active || !phone()) return;
+      fit(); if (document.activeElement === chat) align();
+    });
+    addEventListener('resize', fit);
+    // The browser also scrolls the page by itself when the chat moves to its next question; put the chat back,
+    // unless the visitor scrolled the page themselves (their touches on the page outside the chat).
+    let userScroll = 0, timer;
+    ['touchmove', 'wheel', 'keydown'].forEach(t => addEventListener(t, () => { userScroll = Date.now(); }, { passive: true }));
+    addEventListener('scroll', () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        if (active && phone() && document.activeElement === chat && Date.now() - userScroll > 800) align();
+      }, 120);
+    }, { passive: true });
+  }
 </script>
 </body>
 </html>
