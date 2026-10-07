@@ -183,6 +183,7 @@ def main():
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(redirect_html(old.count("/"), new))
     (OUT / ".nojekyll").write_text("")
+    (OUT / "CNAME").write_text(SITE_URL.split("//")[1] + "\n")   # custom domain for GitHub Pages
     urls = "".join(f"<url><loc>{SITE_URL}/{'' if n == 'index' else n}</loc></url>" for n in PAGES)
     (OUT / "sitemap.xml").write_text('<?xml version="1.0" encoding="UTF-8"?>\n'
                                      f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>\n')
