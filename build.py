@@ -37,6 +37,9 @@ PAGES = {  # file: (title, description, menu key)
                  "building itself.", "insurance"),
     "umbrella": ("Umbrella insurance in Georgia | Velinsurance and Financial Services",
                  "An extra $1 million or more of liability above your home and auto limits.", "insurance"),
+    "commercial": ("Commercial insurance in Georgia | Velinsurance and Financial Services",
+                   "General liability, business owner's policies, commercial auto and workers' compensation for "
+                   "Georgia small businesses.", "insurance"),
     "about": ("About us | Velinsurance and Financial Services",
               "A local, independent property and casualty agency in Cumming, Georgia. Georgia agency license #245535.",
               "about"),
@@ -49,7 +52,8 @@ PAGES = {  # file: (title, description, menu key)
 REDIRECTS = {"home": "index", "services": "index", "services/auto": "auto", "services/home": "homeowners",
              "services/umbrella": "umbrella"}
 
-INSURANCE_MENU = [("auto", "Auto"), ("homeowners", "Homeowners"), ("landlord", "Landlord"), ("umbrella", "Umbrella")]
+INSURANCE_MENU = [("auto", "Auto"), ("homeowners", "Home"), ("landlord", "Landlord"), ("umbrella", "Umbrella"),
+                  ("commercial", "Commercial")]
 
 JSON_LD = {
     "@context": "https://schema.org", "@type": "InsuranceAgency",
@@ -65,18 +69,12 @@ def header(page, menu):
     def a(target, label):
         on = ' class="on" aria-current="page"' if page == target else ""
         return f'<a href="{target}.html"{on}>{label}</a>'
-    sub = "".join(f'<a href="{p}.html"{" class=on" if page == p else ""}>{label}</a>' for p, label in INSURANCE_MENU)
-    ins_on = " on" if menu == "insurance" else ""
     return f"""<a class="skip" href="#main">Skip to content</a>
 <header class="site-head">
   <div class="wrap">
-    <a href="index.html"><img alt="Velinsurance and Financial Services" src="images/logo.png" width="300" height="182"></a>
+    <a href="index.html" aria-label="Home"><img alt="Velinsurance and Financial Services" src="images/logo.png" width="300" height="182"></a>
     <nav class="nav" aria-label="Main">
-      {a("index", "Home")}
-      <div class="dd" id="dd">
-        <button class="dd-btn{ins_on}" id="dd-btn" type="button" aria-expanded="false" aria-controls="dd-menu">Insurance <span aria-hidden="true">&#9662;</span></button>
-        <div class="dd-menu" id="dd-menu">{sub}</div>
-      </div>
+      {"".join(a(p, label) for p, label in INSURANCE_MENU)}
       {a("about", "About")}{a("contact", "Contact")}
       <a class="btn primary" href="contact.html" style="padding:10px 16px">Free policy review</a>
     </nav>
@@ -100,15 +98,6 @@ FOOTER = f"""<footer class="site-foot">
 </footer>"""
 
 SCRIPT = """<script>
-  const dd = document.getElementById('dd'), ddBtn = document.getElementById('dd-btn');
-  ddBtn.addEventListener('click', () => {
-    const open = !dd.classList.contains('open');
-    dd.classList.toggle('open', open); ddBtn.setAttribute('aria-expanded', String(open));
-  });
-  document.addEventListener('click', e => {
-    if (!dd.contains(e.target)) { dd.classList.remove('open'); ddBtn.setAttribute('aria-expanded', 'false'); }
-  });
-
   // Contact page on phones: once the visitor is in the chat, size it to the visible screen (above the keyboard)
   // and keep its top at the top of the screen, so the keyboard can't push the chat away.
   const chat = document.querySelector('.upload-frame');
@@ -154,6 +143,7 @@ WAVE = """<svg width="0" height="0" style="position:absolute" aria-hidden="true"
   <symbol id="i-car" viewBox="0 0 48 48"><path d="M8 30v-6l4-10h24l4 10v6" fill="none" stroke="#1747a6" stroke-width="3" stroke-linejoin="round"/><rect x="6" y="24" width="36" height="10" rx="3" fill="#3c9a3a"/><circle cx="14" cy="36" r="4" fill="#0b2545"/><circle cx="34" cy="36" r="4" fill="#0b2545"/></symbol>
   <symbol id="i-home" viewBox="0 0 48 48"><path d="M6 24 24 8l18 16" fill="none" stroke="#3c9a3a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M11 22v18h26V22" fill="none" stroke="#1747a6" stroke-width="3"/><rect x="20" y="27" width="8" height="8" fill="#1747a6"/></symbol>
   <symbol id="i-key" viewBox="0 0 48 48"><circle cx="16" cy="24" r="8" fill="none" stroke="#1747a6" stroke-width="3.5"/><path d="M24 24h18M36 24v7M41 24v5" stroke="#3c9a3a" stroke-width="3.5" stroke-linecap="round"/></symbol>
+  <symbol id="i-biz" viewBox="0 0 48 48"><rect x="8" y="12" width="20" height="28" fill="none" stroke="#1747a6" stroke-width="3"/><rect x="28" y="20" width="12" height="20" fill="#3c9a3a"/><path d="M14 18h8M14 24h8M14 30h8" stroke="#1747a6" stroke-width="3"/><path d="M4 40h40" stroke="#0b2545" stroke-width="3" stroke-linecap="round"/></symbol>
   <symbol id="i-umb" viewBox="0 0 48 48"><path d="M4 24a20 18 0 0 1 40 0Z" fill="#3c9a3a"/><path d="M4 24a20 18 0 0 1 20-18v18Z" fill="#1747a6"/><path d="M24 24v14a4 4 0 0 1-8 0" fill="none" stroke="#f2b705" stroke-width="3" stroke-linecap="round"/></symbol>
 </defs></svg>"""
 

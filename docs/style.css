@@ -92,7 +92,7 @@
   }
   .step p, .card p, .why p { color: var(--muted); }
 
-  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 18px; }
   .card { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 26px; display: grid; gap: 12px; align-content: start; }
   .card svg { width: 46px; height: 46px; }
   .card a { font: 700 14.5px/1 var(--label); text-decoration: none; color: var(--green); margin-top: 4px; }
