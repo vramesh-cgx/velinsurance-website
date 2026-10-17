@@ -158,7 +158,8 @@
     height: calc(100svh - 190px); min-height: 430px; max-height: 720px;
   }
   @media (max-width: 820px) {
-    .upload-frame { height: calc(100svh - 172px); }
+    /* phones: a fixed, full-screen-high chat; svh ignores the keyboard and address bar, so it never resizes */
+    .upload-frame { height: calc(100svh - 8px); min-height: 420px; max-height: none; }
   }
   /* Phones: a compact header that scrolls away, so it doesn't take space from the page */
   @media (max-width: 640px) {
