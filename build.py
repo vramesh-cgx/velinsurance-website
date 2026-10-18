@@ -70,6 +70,10 @@ def header(page, menu):
         on = ' class="on" aria-current="page"' if page == target else ""
         return f'<a href="{target}.html"{on}>{label}</a>'
     return f"""<a class="skip" href="#main">Skip to content</a>
+<div class="topbar"><div class="wrap">
+  <span class="where">Independent agency in Cumming, Georgia &middot; GA license #245535</span>
+  <span class="links"><a href="tel:{PHONE_E164}">{PHONE}</a><a href="mailto:{EMAIL}">{EMAIL}</a></span>
+</div></div>
 <header class="site-head">
   <div class="wrap">
     <a href="index.html" aria-label="Home"><img alt="Velinsurance and Financial Services" src="images/logo.png" width="300" height="182"></a>
@@ -155,7 +159,7 @@ def page_html(name, title, desc, menu, body):
 <link rel="icon" href="images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Montserrat:wght@500;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <script type="application/ld+json">{json.dumps(JSON_LD)}</script>
 </head>
