@@ -303,3 +303,35 @@
 
   .band .btns .btn.outline { color: #fff; }
   @media (prefers-reduced-motion: reduce) { .cover-card img { transition: none; } }
+
+  /* ---- one-tap quote start (home page hero, line pages) and the chat inside a page ---- */
+  .quote-pick { display: grid; gap: 10px; }
+  .quote-pick > b { font: 700 17px/1.3 var(--sans); color: var(--navy); }
+  .picks { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pick {
+    display: inline-flex; align-items: center; gap: 8px; padding: 13px 20px; border-radius: 999px; text-decoration: none;
+    background: var(--paper); color: var(--navy); font-weight: 700; font-size: 17px;
+    border: 2px solid var(--action); box-shadow: 0 4px 12px rgba(15, 100, 44, .10); transition: background .15s, color .15s;
+  }
+  .pick:hover { background: var(--action); color: #fff; }
+  .pick:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+  .pick.main { background: var(--action); color: #fff; }
+  .pick.main:hover { background: var(--action-dark); }
+  .upload-link { font-weight: 600; text-decoration: none; }
+  .upload-link:hover { text-decoration: underline; }
+  @media (max-width: 420px) { .pick { padding: 11px 16px; font-size: 16px; } }
+
+  section.quote-sec { background: var(--mist); scroll-margin-top: 96px; }
+  .quote-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: 48px; align-items: start; }
+  @media (max-width: 900px) { .quote-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+  .quote-grid .side { display: grid; gap: 18px; align-content: start; min-width: 0; }
+  .quote-box { display: grid; gap: 10px; min-width: 0; }
+  .quote-frame {
+    width: 100%; border: 0; display: block; background: #fff; border-radius: 14px;
+    height: min(680px, calc(100svh - 120px)); min-height: 480px; box-shadow: 0 12px 34px rgba(3, 44, 105, .12);
+  }
+  .no-sell { display: flex; gap: 8px; align-items: center; margin: 0; font-size: 14.5px; font-weight: 600; color: var(--action-dark); }
+  .no-sell svg { width: 20px; height: 20px; flex: none; }
+  .carrier-row { display: grid; gap: 8px; }
+  .carrier-row .carriers { font-size: 18px; gap: 6px 20px; }
+  .carrier-row .more { font: 500 16px/1.3 var(--sans); color: var(--muted); align-self: center; }

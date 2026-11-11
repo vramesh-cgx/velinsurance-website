@@ -6,7 +6,9 @@ Every page shares the header, footer and <head> below, so a menu or footer chang
 """
 import json
 import pathlib
+import re
 import shutil
+from urllib.parse import quote
 
 ROOT = pathlib.Path(__file__).parent
 OUT = ROOT / "docs"
@@ -15,6 +17,12 @@ SITE_URL = "https://www.velinsurance.com"
 # The document upload assistant (Google Apps Script web app). Paste its /exec link here; while it is empty the
 # Contact page shows WhatsApp and email instead of the upload chat.
 UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec"
+
+# The chat's one-tap quote buttons. Each name must also be in START_LINES in the chat's Code.gs, or the chat asks again.
+QUOTE_LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"]
+
+# Companies we quote with, shown as plain names (no logos). Keep to companies the agency is appointed with.
+CARRIERS = ["Foremost", "Progressive", "GEICO", "Orion180", "Root", "Obie"]
 
 PHONE = "(770) 547-6030"
 PHONE_E164 = "+17705476030"
@@ -144,6 +152,45 @@ def upload_block():
             f'<a class="btn outline" href="mailto:{EMAIL}?subject=Policy%20review">Email it</a></div></div>')
 
 
+def quote_block(line=""):
+    """The quote chat inside a page (home, auto, landlord pages). line skips the chat's first question."""
+    if not UPLOAD_URL:
+        return upload_block()
+    src = UPLOAD_URL + (f"?line={quote(line)}" if line else "")
+    return (f'<div class="quote-box"><iframe class="quote-frame" id="quote-frame" src="{src}" '
+            f'title="Get a quote" loading="lazy" allow="clipboard-write"></iframe>'
+            f'<p class="no-sell"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6Z" '
+            f'fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" '
+            f'stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+            f'Only Velinsurance will contact you. We never sell your information.</p></div>')
+
+
+def carriers_block():
+    return ('<div class="carrier-row"><span class="eyebrow">Companies we quote include</span><div class="carriers">'
+            + "".join(f"<span>{c}</span>" for c in CARRIERS) + '<span class="more">and others</span></div></div>')
+
+
+def quote_script():
+    """Quote buttons (a[data-line]): restart the chat on this page with that choice, or, on pages without the chat,
+    open the Contact page with it. The Contact page passes ?line= on to its chat."""
+    return f"""<script>
+  (() => {{
+    const URL_ = {json.dumps(UPLOAD_URL)}, LINES = {json.dumps(QUOTE_LINES)};
+    const src = line => URL_ + (LINES.includes(line) ? '?line=' + encodeURIComponent(line) : '');
+    const frame = document.getElementById('quote-frame');
+    document.querySelectorAll('a[data-line]').forEach(a => a.addEventListener('click', e => {{
+      if (!frame || !URL_) return;   // no chat on this page: follow the link to the Contact page
+      e.preventDefault();
+      frame.src = src(a.dataset.line);
+      frame.closest('section').scrollIntoView({{ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }});
+    }}));
+    const contact = document.querySelector('.upload-frame');
+    const line = new URLSearchParams(location.search).get('line');
+    if (contact && URL_ && LINES.includes(line)) contact.src = src(line);
+  }})();
+</script>"""
+
+
 def page_html(name, title, desc, menu, body):
     canonical = SITE_URL + "/" + ("" if name == "index" else name)
     return f"""<!DOCTYPE html>
@@ -172,6 +219,7 @@ def page_html(name, title, desc, menu, body):
 {body}</main>
 {FOOTER}
 {SCRIPT}
+{quote_script()}
 </body>
 </html>
 """
@@ -190,7 +238,8 @@ def main():
     shutil.copy(ROOT / "src" / "style.css", OUT / "style.css")
     for name, (title, desc, menu) in PAGES.items():
         body = (ROOT / "src" / "pages" / f"{name}.html").read_text()
-        body = body.replace("{{UPLOAD}}", upload_block())
+        body = body.replace("{{UPLOAD}}", upload_block()).replace("{{CARRIERS}}", carriers_block())
+        body = re.sub(r"\{\{QUOTE(?::([^}]*))?\}\}", lambda m: quote_block(m.group(1) or ""), body)
         (OUT / f"{name}.html").write_text(page_html(name, title, desc, menu, body))
     for old, new in REDIRECTS.items():
         path = OUT / f"{old}.html"

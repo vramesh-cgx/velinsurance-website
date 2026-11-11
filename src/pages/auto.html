@@ -2,8 +2,19 @@
     <span class="eyebrow">Auto insurance</span>
     <h1>Car insurance that covers the whole household</h1>
     <p class="lede">Every driver and every vehicle, quoted with the same coverage across several companies.</p>
-    <div class="btns"><a class="btn primary" href="contact.html">Upload my auto policy</a></div>
+    <div class="btns"><a class="btn primary" data-line="Auto" href="#quote">Start my auto quote</a><a class="btn outline" href="contact.html">Upload my auto policy</a></div>
   </div><img class="hero-img" alt="Two cars parked in front of a Georgia home" src="images/photo-auto.jpg"></div><svg class="wave" aria-hidden="true"><use href="#wave"/></svg></div>
+
+  <section class="quote-sec" id="quote">
+    <div class="wrap quote-grid">
+      <div class="side">
+        <div class="head" style="margin:0"><span class="eyebrow">Start your auto quote</span><h2>A few one-tap questions, about two minutes</h2></div>
+        <p class="lede">Upload your current declarations page if you have it and skip most of the questions.</p>
+        {{CARRIERS}}
+      </div>
+      {{QUOTE:Auto}}
+    </div>
+  </section>
 
   <section><div class="wrap split">
     <div class="head" style="margin:0">

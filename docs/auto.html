@@ -47,8 +47,19 @@
     <span class="eyebrow">Auto insurance</span>
     <h1>Car insurance that covers the whole household</h1>
     <p class="lede">Every driver and every vehicle, quoted with the same coverage across several companies.</p>
-    <div class="btns"><a class="btn primary" href="contact.html">Upload my auto policy</a></div>
+    <div class="btns"><a class="btn primary" data-line="Auto" href="#quote">Start my auto quote</a><a class="btn outline" href="contact.html">Upload my auto policy</a></div>
   </div><img class="hero-img" alt="Two cars parked in front of a Georgia home" src="images/photo-auto.jpg"></div><svg class="wave" aria-hidden="true"><use href="#wave"/></svg></div>
+
+  <section class="quote-sec" id="quote">
+    <div class="wrap quote-grid">
+      <div class="side">
+        <div class="head" style="margin:0"><span class="eyebrow">Start your auto quote</span><h2>A few one-tap questions, about two minutes</h2></div>
+        <p class="lede">Upload your current declarations page if you have it and skip most of the questions.</p>
+        <div class="carrier-row"><span class="eyebrow">Companies we quote include</span><div class="carriers"><span>Foremost</span><span>Progressive</span><span>GEICO</span><span>Orion180</span><span>Root</span><span>Obie</span><span class="more">and others</span></div></div>
+      </div>
+      <div class="quote-box"><iframe class="quote-frame" id="quote-frame" src="https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec?line=Auto" title="Get a quote" loading="lazy" allow="clipboard-write"></iframe><p class="no-sell"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8.4 7 10 4-1.6 7-5.5 7-10V6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="m9 12 2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Only Velinsurance will contact you. We never sell your information.</p></div>
+    </div>
+  </section>
 
   <section><div class="wrap split">
     <div class="head" style="margin:0">
@@ -108,6 +119,22 @@
     if (vv) { vv.addEventListener('resize', fit); vv.addEventListener('scroll', fit); }
     chat.loading = 'eager';
   }
+</script>
+<script>
+  (() => {
+    const URL_ = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec", LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"];
+    const src = line => URL_ + (LINES.includes(line) ? '?line=' + encodeURIComponent(line) : '');
+    const frame = document.getElementById('quote-frame');
+    document.querySelectorAll('a[data-line]').forEach(a => a.addEventListener('click', e => {
+      if (!frame || !URL_) return;   // no chat on this page: follow the link to the Contact page
+      e.preventDefault();
+      frame.src = src(a.dataset.line);
+      frame.closest('section').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }));
+    const contact = document.querySelector('.upload-frame');
+    const line = new URLSearchParams(location.search).get('line');
+    if (contact && URL_ && LINES.includes(line)) contact.src = src(line);
+  })();
 </script>
 </body>
 </html>
