@@ -22,7 +22,11 @@ UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCS
 QUOTE_LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"]
 
 # Companies we quote with, shown as plain names (no logos). Keep to companies the agency is appointed with.
-CARRIERS = ["Foremost", "Progressive", "GEICO", "Orion180", "Root", "Obie"]
+CARRIERS = ["Progressive", "GEICO", "National General", "Foremost", "Bristol West", "American Modern", "Orion180", "Root"]
+
+# The home page redesign (Design canvas "Velinsurance Website Redesign") uses Inter and Space Grotesk.
+HOME_FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700'
+              '&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">\n')
 
 PHONE = "(770) 547-6030"
 PHONE_E164 = "+17705476030"
@@ -209,7 +213,7 @@ def page_html(name, title, desc, menu, body):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+{HOME_FONTS if name == "index" else ""}<link rel="stylesheet" href="style.css">
 <script type="application/ld+json">{json.dumps(JSON_LD)}</script>
 </head>
 <body>
