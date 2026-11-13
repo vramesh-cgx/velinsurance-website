@@ -193,14 +193,63 @@ def carriers_block():
             + "".join(f"<span>{c}</span>" for c in CARRIERS) + '<span class="more">and others</span></div></div>')
 
 
+def track_script(page):
+    """Counts visits, where visitors came from and button taps, in the agency's Google Drive (the upload assistant's
+    doPost). No cookies and nothing personal: a page name, a source word such as "google", and which button.
+    The source is worked out once per visit and kept in sessionStorage so the chat can be told it too."""
+    return f"""<script>
+  (() => {{
+    const URL_ = {json.dumps(UPLOAD_URL)};
+    const host = h => {{ try {{ return new URL(h).hostname; }} catch (e) {{ return ''; }} }};
+    const classify = () => {{
+      const utm = (new URLSearchParams(location.search).get('utm_source') || '').toLowerCase();
+      if (utm) return utm;
+      const h = host(document.referrer);
+      if (!h || h === location.hostname) return 'direct';
+      const known = [[/(^|\\.)google\\./, 'google'], [/bing\\./, 'bing'], [/yahoo\\./, 'yahoo'], [/duckduckgo/, 'duckduckgo'],
+        [/facebook|fb\\.|messenger/, 'facebook'], [/instagram/, 'instagram'], [/nextdoor/, 'nextdoor'], [/yelp/, 'yelp'],
+        [/linkedin|lnkd/, 'linkedin'], [/chatgpt|openai|perplexity|claude\\.ai|gemini|copilot/, 'ai-chat']];
+      for (const [re, name] of known) if (re.test(h)) return name;
+      return 'referral';
+    }};
+    let src = null, first = false;
+    try {{ src = sessionStorage.getItem('vel-src'); }} catch (e) {{}}
+    if (!src) {{ first = true; src = classify(); try {{ sessionStorage.setItem('vel-src', src); }} catch (e) {{}} }}
+    window.VEL_SRC = src;
+    if (!URL_ || navigator.webdriver || !navigator.sendBeacon) return;   // no counting for test robots
+    const send = q => {{ try {{ navigator.sendBeacon(URL_ + '?' + new URLSearchParams(q), ''); }} catch (e) {{}} }};
+    send({{ ev: 'visit', p: {json.dumps(page)}, new: first ? '1' : '0', src }});
+    document.addEventListener('click', e => {{
+      const a = e.target.closest('a, button');
+      if (!a) return;
+      const href = a.getAttribute('href') || '';
+      const k = a.dataset.track || (href.startsWith('tel:') ? 'call' : href.startsWith('sms:') ? 'text' :
+        href.includes('calendar.app.google') ? 'book' : '');
+      if (k) send({{ ev: 'click', k }});
+    }}, true);
+  }})();
+</script>"""
+
+
 def quote_script():
     """Quote buttons (a[data-line]): restart the chat on this page with that choice, or, on pages without the chat,
     open the Contact page with it. The Contact page passes ?line= on to its chat."""
     return f"""<script>
   (() => {{
     const URL_ = {json.dumps(UPLOAD_URL)}, LINES = {json.dumps(QUOTE_LINES)};
-    const src = line => URL_ + (LINES.includes(line) ? '?line=' + encodeURIComponent(line) : '');
+    const src = line => {{
+      const q = new URLSearchParams();
+      if (LINES.includes(line)) q.set('line', line);
+      if (window.VEL_SRC) q.set('src', window.VEL_SRC);   // where the visitor came from, counted with the lead
+      return URL_ + (q.toString() ? '?' + q : '');
+    }};
     const frame = document.getElementById('quote-frame');
+    // tell the chat where this visitor came from (the iframes load lazily, so this lands before they load)
+    document.querySelectorAll('.quote-frame, .upload-frame').forEach(f => {{
+      if (!URL_ || !window.VEL_SRC) return;
+      const line = new URL(f.src).searchParams.get('line');
+      f.src = src(line);
+    }});
     document.querySelectorAll('a[data-line]').forEach(a => a.addEventListener('click', e => {{
       if (!frame || !URL_) return;   // no chat on this page: follow the link to the Contact page
       e.preventDefault();
@@ -242,6 +291,7 @@ def page_html(name, title, desc, menu, body):
 {body}</main>
 {FOOTER}
 {SCRIPT}
+{track_script(name)}
 {quote_script()}
 </body>
 </html>
