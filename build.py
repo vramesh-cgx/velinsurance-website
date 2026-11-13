@@ -22,7 +22,10 @@ UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCS
 QUOTE_LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"]
 
 # Companies we quote with, shown as plain names (no logos). Keep to companies the agency is appointed with.
-CARRIERS = ["Progressive", "GEICO", "National General", "Foremost", "Bristol West", "American Modern", "Orion180", "Root"]
+# Empty = the "Companies we quote include" row is left off every page. Hidden 2026-11-13 until each company approves
+# being named; the list that was shown: Progressive, GEICO, National General, Foremost, Bristol West, American Modern,
+# Orion180, Root.
+CARRIERS = []
 
 # The home page redesign (Design canvas "Velinsurance Website Redesign") uses Inter and Space Grotesk.
 HOME_FONTS = ('<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700'
@@ -170,6 +173,8 @@ def quote_block(line=""):
 
 
 def carriers_block():
+    if not CARRIERS:
+        return ""
     return ('<div class="carrier-row"><span class="eyebrow">Companies we quote include</span><div class="carriers">'
             + "".join(f"<span>{c}</span>" for c in CARRIERS) + '<span class="more">and others</span></div></div>')
 
