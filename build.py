@@ -19,7 +19,11 @@ SITE_URL = "https://www.velinsurance.com"
 UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec"
 
 # The chat's one-tap quote buttons. Each name must also be in START_LINES in the chat's Code.gs, or the chat asks again.
-QUOTE_LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"]
+QUOTE_LINES = ["Home + Auto", "Auto", "Home", "Home + Auto + Landlord", "Landlord", "Pet", "Renters", "Umbrella", "Condo"]
+
+# Home page "Start my quote" list: QUOTE_LINES start the chat; these open their own page. Placeholders until each page
+# exists: an empty address texts the agency about that insurance instead.
+LINK_LINES = {"Term Life Insurance": "", "Life Insurance": "", "Health Insurance": "", "Visitors Insurance": ""}
 
 # Companies we quote with, shown as plain names (no logos). Keep to companies the agency is appointed with.
 # Empty = the "Companies we quote include" row is left off every page. Hidden 2026-11-13 until each company approves
@@ -172,6 +176,16 @@ def quote_block(line=""):
             f'Only Velinsurance will contact you. We never sell your information.</p></div>')
 
 
+def quote_options():
+    chat = "".join(f'<a class="rd-opt" data-line="{l}" href="contact.html?line={quote(l)}">{l}</a>' for l in QUOTE_LINES)
+    def link(label, url):
+        if url:
+            return f'<a class="rd-opt" href="{url}">{label}</a>'
+        body = quote(f"Hi, I'd like a quote for {label.lower()}")
+        return f'<a class="rd-opt" href="sms:{PHONE_E164}?&amp;body={body}">{label}</a>'
+    return f'<div class="rd-opt-grid">{chat}{"".join(link(k, v) for k, v in LINK_LINES.items())}</div>'
+
+
 def carriers_block():
     if not CARRIERS:
         return ""
@@ -247,7 +261,8 @@ def main():
     shutil.copy(ROOT / "src" / "style.css", OUT / "style.css")
     for name, (title, desc, menu) in PAGES.items():
         body = (ROOT / "src" / "pages" / f"{name}.html").read_text()
-        body = body.replace("{{UPLOAD}}", upload_block()).replace("{{CARRIERS}}", carriers_block())
+        body = body.replace("{{UPLOAD}}", upload_block()).replace("{{CARRIERS}}", carriers_block())\
+            .replace("{{QUOTE_OPTIONS}}", quote_options())
         body = re.sub(r"\{\{QUOTE(?::([^}]*))?\}\}", lambda m: quote_block(m.group(1) or ""), body)
         (OUT / f"{name}.html").write_text(page_html(name, title, desc, menu, body))
     for old, new in REDIRECTS.items():

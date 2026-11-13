@@ -52,30 +52,19 @@
         <span class="rd-kicker">Home and auto insurance, Georgia</span>
         <h1 id="rd-h1">Premium jumped at renewal or rate too high? Let us save you money.</h1>
         <p class="rd-lede">Same coverage, compared across several insurance companies. You get the options side by side and pick the one you like.</p>
-        <ul class="rd-checks">
-          <li>Free, no obligation</li>
-          <li>Soft credit check only</li>
-          <li>Reply within one business day</li>
-        </ul>
       </div>
 
       <div class="rd-card">
         <h2>Start your free quote</h2>
-        <div class="rd-field" role="group" aria-labelledby="rd-cover-q">
-          <span id="rd-cover-q" class="rd-label">What do you need covered?</span>
-          <div class="rd-pills">
-            <button type="button" class="rd-pill" data-pick="Auto" aria-pressed="false">Auto</button>
-            <button type="button" class="rd-pill" data-pick="Home" aria-pressed="false">Home</button>
-            <button type="button" class="rd-pill" data-pick="Home + Auto" aria-pressed="true">Auto + Home</button>
-            <button type="button" class="rd-pill" data-pick="Landlord" aria-pressed="false">Landlord</button>
-          </div>
-        </div>
         <div class="rd-card-btns">
-          <a id="rd-start" class="rd-btn rd-btn-big" data-line="Home + Auto" href="contact.html?line=Home%20%2B%20Auto">Start my quote</a>
           <a class="rd-btn rd-btn-big rd-btn-line" href="sms:+17705476030?&amp;body=Hi%2C%20I%27d%20like%20an%20insurance%20quote">Connect with Agency</a>
+          <a id="rd-start" class="rd-btn rd-btn-big" href="#quote" aria-expanded="false" aria-controls="rd-options">Start my quote</a>
         </div>
-        <p class="rd-small">Rather talk to a person? Connect with Agency opens a text message to <span class="rd-nowrap">(770) 547-6030</span>.</p>
-        <p class="rd-small">Takes about 2 minutes. Already insured? <a href="contact.html">Upload your current policy instead</a></p>
+        <div id="rd-options" class="rd-options" role="group" aria-labelledby="rd-options-q">
+          <span id="rd-options-q" class="rd-label">What would you like us to quote?</span>
+          <div class="rd-opt-grid"><a class="rd-opt" data-line="Home + Auto" href="contact.html?line=Home%20%2B%20Auto">Home + Auto</a><a class="rd-opt" data-line="Auto" href="contact.html?line=Auto">Auto</a><a class="rd-opt" data-line="Home" href="contact.html?line=Home">Home</a><a class="rd-opt" data-line="Home + Auto + Landlord" href="contact.html?line=Home%20%2B%20Auto%20%2B%20Landlord">Home + Auto + Landlord</a><a class="rd-opt" data-line="Landlord" href="contact.html?line=Landlord">Landlord</a><a class="rd-opt" data-line="Pet" href="contact.html?line=Pet">Pet</a><a class="rd-opt" data-line="Renters" href="contact.html?line=Renters">Renters</a><a class="rd-opt" data-line="Umbrella" href="contact.html?line=Umbrella">Umbrella</a><a class="rd-opt" data-line="Condo" href="contact.html?line=Condo">Condo</a><a class="rd-opt" href="sms:+17705476030?&amp;body=Hi%2C%20I%27d%20like%20a%20quote%20for%20term%20life%20insurance">Term Life Insurance</a><a class="rd-opt" href="sms:+17705476030?&amp;body=Hi%2C%20I%27d%20like%20a%20quote%20for%20life%20insurance">Life Insurance</a><a class="rd-opt" href="sms:+17705476030?&amp;body=Hi%2C%20I%27d%20like%20a%20quote%20for%20health%20insurance">Health Insurance</a><a class="rd-opt" href="sms:+17705476030?&amp;body=Hi%2C%20I%27d%20like%20a%20quote%20for%20visitors%20insurance">Visitors Insurance</a></div>
+        </div>
+        <p class="rd-small">Connect with Agency opens a text message to <span class="rd-nowrap">(770) 547-6030</span>. Already insured? <a href="contact.html">Upload your current policy</a></p>
       </div>
     </div>
     <div class="rd-wrap">
@@ -192,14 +181,17 @@
 
 </div>
 <script>
-  // Hero coverage buttons: one is selected at a time; "Start my quote" starts the chat below with that choice.
+  // "Start my quote" shows the list of insurance types; each one starts the chat below (or opens its own page).
   (() => {
-    const start = document.getElementById('rd-start');
-    document.querySelectorAll('.rd-pill').forEach(b => b.addEventListener('click', () => {
-      document.querySelectorAll('.rd-pill').forEach(o => o.setAttribute('aria-pressed', String(o === b)));
-      start.dataset.line = b.dataset.pick;
-      start.href = 'contact.html?line=' + encodeURIComponent(b.dataset.pick);
-    }));
+    const start = document.getElementById('rd-start'), opts = document.getElementById('rd-options');
+    document.documentElement.classList.add('rd-js');
+    start.addEventListener('click', e => {
+      e.preventDefault();
+      const open = start.getAttribute('aria-expanded') !== 'true';
+      start.setAttribute('aria-expanded', String(open));
+      opts.classList.toggle('open', open);
+      if (open) opts.querySelector('a').focus({ preventScroll: true });
+    });
   })();
 </script>
 </main>
@@ -240,7 +232,7 @@
 </script>
 <script>
   (() => {
-    const URL_ = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec", LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"];
+    const URL_ = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec", LINES = ["Home + Auto", "Auto", "Home", "Home + Auto + Landlord", "Landlord", "Pet", "Renters", "Umbrella", "Condo"];
     const src = line => URL_ + (LINES.includes(line) ? '?line=' + encodeURIComponent(line) : '');
     const frame = document.getElementById('quote-frame');
     document.querySelectorAll('a[data-line]').forEach(a => a.addEventListener('click', e => {

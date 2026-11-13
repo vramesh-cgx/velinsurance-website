@@ -479,3 +479,14 @@
   .rd-card-btns { display: grid; gap: 12px; }
   .rd-nowrap { white-space: nowrap; }
   .rd-carriers:not(:has(.carrier-row)) { display: none; }   /* no carrier names listed: drop the empty row */
+
+  /* home page quote card: Connect with Agency / Start my quote, then the list of insurance types */
+  .rd-options { display: grid; gap: 10px; }
+  .rd-js .rd-options:not(.open) { display: none; }   /* without JavaScript the list just shows */
+  .rd-opt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; }
+  .rd a.rd-opt {
+    display: flex; align-items: center; justify-content: center; text-align: center; min-height: 46px; padding: 6px 12px;
+    border-radius: 10px; border: 1.5px solid var(--rd-field); background: #fff; color: var(--rd-navy);
+    font: 600 15px/1.25 Inter, system-ui, sans-serif; text-decoration: none; box-sizing: border-box;
+  }
+  .rd a.rd-opt:hover { border-color: var(--rd-navy); background: var(--rd-navy); color: #fff; }
