@@ -114,7 +114,7 @@
 </script>
 <script>
   (() => {
-    const URL_ = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec", LINES = ["Home", "Auto", "Home + Auto", "Renters", "Landlord"];
+    const URL_ = "https://script.google.com/macros/s/AKfycbwNLHYYMK2hor5f8lopfKgBsCSR2THp9yQFdY89043Yjic8aBSzZw6LqEDC0bjFA_F2/exec", LINES = ["Home + Auto", "Auto", "Home", "Home + Auto + Landlord", "Landlord", "Pet", "Renters", "Umbrella", "Condo"];
     const src = line => URL_ + (LINES.includes(line) ? '?line=' + encodeURIComponent(line) : '');
     const frame = document.getElementById('quote-frame');
     document.querySelectorAll('a[data-line]').forEach(a => a.addEventListener('click', e => {
