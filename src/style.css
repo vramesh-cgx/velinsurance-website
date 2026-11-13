@@ -475,3 +475,6 @@
   .rd-band .rd-wrap > div:first-child { flex: 1 1 420px; min-width: 0; display: grid; gap: 10px; }
   .rd-band h2 { color: #fff; line-height: 1.15; }
   .rd-band p { font-size: 18px; color: #D5DEE5; }
+  /* quote card: Start my quote, then Connect with Agency underneath, both full width */
+  .rd-card-btns { display: grid; gap: 12px; }
+  .rd-nowrap { white-space: nowrap; }
