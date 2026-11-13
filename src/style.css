@@ -490,3 +490,5 @@
     font: 600 15px/1.25 Inter, system-ui, sans-serif; text-decoration: none; box-sizing: border-box;
   }
   .rd a.rd-opt:hover { border-color: var(--rd-navy); background: var(--rd-navy); color: #fff; }
+  .rd-card .rd-upload { margin-top: -8px; font-size: 15px; }
+  .rd-card .rd-upload a { font-weight: 600; }
